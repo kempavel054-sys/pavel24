@@ -1,0 +1,1042 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24节气农谚学习刷题小游戏</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4B6BFB',
+                        secondary: '#FF8A65',
+                        neutral: '#F5F5F5',
+                        dark: '#333333',
+                        light: '#FFFFFF'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-in': 'slideIn 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+            }
+            .btn-primary {
+                @apply bg-primary text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-opacity-90 hover:shadow-md;
+            }
+            .btn-secondary {
+                @apply bg-secondary text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-opacity-90 hover:shadow-md;
+            }
+            .btn-outline {
+                @apply border border-primary text-primary px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-primary hover:text-white;
+            }
+            .input-primary {
+                @apply border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+            }
+        }
+    </style>
+</head>
+<body class="bg-neutral min-h-screen">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-leaf text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold text-dark">24节气农谚学习</h1>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#" class="text-dark hover:text-primary transition-colors duration-300 font-medium" id="nav-home">首页</a>
+                <a href="#" class="text-dark hover:text-primary transition-colors duration-300 font-medium" id="nav-about">关于</a>
+            </div>
+            <button class="md:hidden text-dark text-xl" id="mobile-menu-button">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <!-- 移动端菜单 -->
+        <div class="md:hidden hidden bg-white w-full shadow-md animate-fade-in" id="mobile-menu">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+                <a href="#" class="text-dark hover:text-primary transition-colors duration-300 font-medium py-2 border-b border-gray-100" id="mobile-nav-home">首页</a>
+                <a href="#" class="text-dark hover:text-primary transition-colors duration-300 font-medium py-2" id="mobile-nav-about">关于</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 首页内容 -->
+        <section id="home-section" class="animate-fade-in">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-dark mb-4">24节气农谚</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">探索中国传统24节气文化，学习农耕智慧，通过互动游戏加深理解。</p>
+            </div>
+
+            <!-- 节气卡片网格 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="solar-terms-grid">
+                <!-- 节气卡片将通过JavaScript动态生成 -->
+            </div>
+        </section>
+
+        <!-- 节气详情页 -->
+        <section id="term-detail-section" class="hidden animate-fade-in">
+            <div class="mb-8">
+                <button class="flex items-center text-primary font-medium mb-4" id="back-to-home">
+                    <i class="fa fa-arrow-left mr-2"></i> 返回首页
+                </button>
+                <h2 class="text-3xl font-bold text-dark mb-2" id="term-name">立春</h2>
+                <p class="text-gray-600" id="term-english">Start of Spring</p>
+                <div class="w-20 h-1 bg-primary mt-4 mb-6"></div>
+                <p class="text-gray-700 mb-6" id="term-description">立春标志着春季的开始，大地复苏，万物生长。</p>
+            </div>
+
+            <!-- 学习和刷题按钮 -->
+            <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                <button class="btn-primary flex-1 flex justify-center items-center" id="study-mode-btn">
+                    <i class="fa fa-book mr-2"></i> 学习模式
+                </button>
+                <button class="btn-secondary flex-1 flex justify-center items-center" id="quiz-mode-btn">
+                    <i class="fa fa-pencil-square-o mr-2"></i> 刷题模式
+                </button>
+            </div>
+
+            <!-- 学习模式内容 -->
+            <div id="study-mode-content" class="bg-white rounded-xl shadow-md p-6 mb-8 animate-fade-in">
+                <h3 class="text-2xl font-bold text-dark mb-6 text-center">学习模式</h3>
+                <div class="relative" id="proverb-slider">
+                    <!-- 农谚卡片将通过JavaScript动态生成 -->
+                </div>
+                <div class="flex justify-center mt-6 space-x-2" id="slider-indicators">
+                    <!-- 指示器将通过JavaScript动态生成 -->
+                </div>
+            </div>
+
+            <!-- 刷题模式内容 -->
+            <div id="quiz-mode-content" class="bg-white rounded-xl shadow-md p-6 mb-8 hidden animate-fade-in">
+                <h3 class="text-2xl font-bold text-dark mb-6 text-center">刷题模式</h3>
+                <div id="quiz-container">
+                    <!-- 题目将通过JavaScript动态生成 -->
+                </div>
+                <div class="mt-6 text-center">
+                    <button class="btn-primary" id="next-question-btn">下一题</button>
+                    <button class="btn-outline hidden" id="retry-quiz-btn">重新开始</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于页面 -->
+        <section id="about-section" class="hidden animate-fade-in">
+            <div class="bg-white rounded-xl shadow-md p-8 max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-dark mb-6">关于本项目</h2>
+                <p class="text-gray-700 mb-4">
+                    24节气是中国古代劳动人民长期观察天气、气候与农业生产关系而总结出来的智慧结晶，是中国传统文化的重要组成部分。
+                </p>
+                <p class="text-gray-700 mb-4">
+                    本项目旨在帮助留学生和对中国文化感兴趣的人士学习24节气知识，通过农谚了解中国传统农耕文化，并通过互动游戏加深理解和记忆。
+                </p>
+                <p class="text-gray-700 mb-6">
+                    每个节气包含：
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-6 space-y-2">
+                    <li>节气名称（中文 + 英文）</li>
+                    <li>节气描述</li>
+                    <li>两条经典农谚（原文 + 中文解释 + 英文翻译）</li>
+                    <li>互动选择题（测试对农谚的理解）</li>
+                </ul>
+                <p class="text-gray-700">
+                    希望这个项目能帮助你更好地了解中国传统文化，感受古代劳动人民的智慧！
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa fa-leaf text-primary text-2xl"></i>
+                        <h2 class="text-xl font-bold">24节气农谚学习</h2>
+                    </div>
+                    <p class="text-gray-400 mt-2">探索中国传统农耕文化</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                        <i class="fa fa-github text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                        <i class="fa fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                        <i class="fa fa-instagram text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-6 pt-6 text-center text-gray-500">
+                <p style="color: rgb(123, 107, 128);">董琪称2025 24节气农谚学习项目. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 结果弹窗 -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" id="result-modal">
+        <div class="bg-white rounded-xl shadow-lg p-8 max-w-md w-full animate-fade-in">
+            <h3 class="text-2xl font-bold text-dark mb-4 text-center" id="result-title">测验结果</h3>
+            <p class="text-gray-700 text-center mb-6" id="result-message">你答对了 <span id="correct-count">0</span> 题，共 <span id="total-count">0</span> 题！</p>
+            <div class="flex justify-center">
+                <button class="btn-primary" id="close-result-modal">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 24节气数据
+        const solarTermsData = [
+            {
+                id: "lichun",
+                name: "立春",
+                english: "Start of Spring",
+                description: "立春标志着春季的开始，大地复苏，万物生长。农民开始准备春耕播种。",
+                proverbs: [
+                    {
+                        chinese: "立春一日，百草回芽",
+                        explanation: "立春这一天，所有的草木都开始发芽，大地恢复生机。",
+                        english: "On the day of Start of Spring, all grasses sprout anew."
+                    },
+                    {
+                        chinese: "立春一年端，种地早盘算",
+                        explanation: "立春是一年的开始，种地要早早打算。",
+                        english: "Start of Spring is the beginning of the year; farming should be planned early."
+                    }
+                ]
+            },
+            {
+                id: "yushui",
+                name: "雨水",
+                english: "Rain Water",
+                description: "雨水时节，降雨量增多，滋养作物，促进早春播种。",
+                proverbs: [
+                    {
+                        chinese: "雨水节，育秧苗，三分种七分管",
+                        explanation: "雨水节气是育秧苗的时节，种植只占三成，管理占七成。",
+                        english: "During Rain Water, raise rice seedlings; planting is 30%, management is 70%."
+                    },
+                    {
+                        chinese: "雨水有雨庄稼好，大春小春一片宝",
+                        explanation: "雨水节气下雨对庄稼生长有利，大小春作物都能丰收。",
+                        english: "Rain during Rain Water benefits crops; both spring harvests will be bountiful."
+                    }
+                ]
+            },
+            {
+                id: "jingzhe",
+                name: "惊蛰",
+                english: "Waking of Insects",
+                description: "惊蛰时节，春雷响起，惊醒冬眠的昆虫，农民开始春耕。",
+                proverbs: [
+                    {
+                        chinese: "惊蛰春雷响，农夫闲转忙",
+                        explanation: "惊蛰时节春雷响起，农民从悠闲转为忙碌。",
+                        english: "Thunder in Waking of Insects sets farmers from leisure to labor."
+                    },
+                    {
+                        chinese: "惊蛰过，暖和和，蛤蟆老角唱山歌",
+                        explanation: "惊蛰过后，天气变暖，蛤蟆开始鸣叫。",
+                        english: "After Waking of Insects, the weather warms, and toads begin to sing."
+                    }
+                ]
+            },
+            {
+                id: "chunfen",
+                name: "春分",
+                english: "Spring Equinox",
+                description: "春分时节，昼夜几乎等长。农民开始种植棉花、小麦等作物。",
+                proverbs: [
+                    {
+                        chinese: "春分麦起身，一刻值千金",
+                        explanation: "春分时节小麦开始拔节生长，每一刻都非常宝贵。",
+                        english: "Wheat begins to grow at Spring Equinox; every moment is precious."
+                    },
+                    {
+                        chinese: "春分阴雨天，春季雨不歇",
+                        explanation: "春分如果是阴雨天，整个春季雨水都会比较多。",
+                        english: "If Spring Equinox is rainy, the spring will have continuous rain."
+                    }
+                ]
+            },
+            {
+                id: "qingming",
+                name: "清明",
+                english: "Pure Brightness",
+                description: "清明兼具自然的清新与文化的仪式感。人们扫墓祭祖，同时踏青赏花。",
+                proverbs: [
+                    {
+                        chinese: "清明前后，种瓜点豆",
+                        explanation: "清明前后是种瓜种豆的最佳时节。",
+                        english: "Around Pure Brightness, plant melons and beans."
+                    },
+                    {
+                        chinese: "清明种棉早，小满拾花好",
+                        explanation: "清明种棉花太早，小满拾棉花最好。",
+                        english: "Cotton planted at Pure Brightness is early; picking at Grain Buds is good."
+                    }
+                ]
+            },
+            {
+                id: "guyu",
+                name: "谷雨",
+                english: "Grain Rain",
+                description: "谷雨意味着充沛的降雨滋养谷物。这是种植水稻和采茶的关键时期。",
+                proverbs: [
+                    {
+                        chinese: "谷雨祭仓颉",
+                        explanation: "谷雨时节祭祀汉字发明者仓颉。",
+                        english: "Grain Rain honors the inventor of writing."
+                    },
+                    {
+                        chinese: "谷雨种棉正适时",
+                        explanation: "谷雨是种棉花的最佳时节。",
+                        english: "Grain Rain is the right time to plant cotton."
+                    }
+                ]
+            },
+            {
+                id: "lixia",
+                name: "立夏",
+                english: "Start of Summer",
+                description: "立夏标志着夏季的开始。古代有'秤人'仪式以监测健康，农民则专注于照料幼苗。",
+                proverbs: [
+                    {
+                        chinese: "立夏看夏",
+                        explanation: "通过立夏的天气可以预测整个夏季的收成。",
+                        english: "Judge the summer by Start of Summer."
+                    },
+                    {
+                        chinese: "立夏栽茄子，立秋吃茄子",
+                        explanation: "立夏栽种茄子，立秋时就可以收获食用。",
+                        english: "Plant eggplants at Start of Summer, eat them at Start of Autumn."
+                    }
+                ]
+            },
+            {
+                id: "xiaoman",
+                name: "小满",
+                english: "Grain Buds",
+                description: "小满表示夏季作物即将成熟但尚未完全成熟，体现了中国'谦虚知足'的哲学。",
+                proverbs: [
+                    {
+                        chinese: "小满不满，芒种不管",
+                        explanation: "小满时节如果雨水不足，芒种时就会有麻烦。",
+                        english: "If Grain Buds lacks rain, Grain in Ear will be troublesome."
+                    },
+                    {
+                        chinese: "小满麦渐黄，夏至稻花香",
+                        explanation: "小满时节小麦逐渐成熟变黄，夏至时稻花飘香。",
+                        english: "Wheat turns yellow at Grain Buds; rice flowers bloom at Summer Solstice."
+                    }
+                ]
+            },
+            {
+                id: "mangzhong",
+                name: "芒种",
+                english: "Grain in Ear",
+                description: "芒种结合了'忙'和'种'，催促农民收获小麦并种植水稻。",
+                proverbs: [
+                    {
+                        chinese: "芒种芒种，连收带种",
+                        explanation: "芒种时节，既要收割小麦，又要种植水稻，非常忙碌。",
+                        english: "Grain in Ear: harvest and plant simultaneously."
+                    },
+                    {
+                        chinese: "芒种不插秧，秋后脸饿黄",
+                        explanation: "芒种时节如果不插秧，到秋天就会挨饿。",
+                        english: "No rice planting at Grain in Ear means hunger in autumn."
+                    }
+                ]
+            },
+            {
+                id: "xiazhi",
+                name: "夏至",
+                english: "Summer Solstice",
+                description: "夏至是一年中白天最长、夜晚最短的日子。",
+                proverbs: [
+                    {
+                        chinese: "夏至三庚数头伏",
+                        explanation: "从夏至开始，第三个庚日就是初伏的第一天。",
+                        english: "The third Geng day after Summer Solstice marks the beginning of dog days."
+                    },
+                    {
+                        chinese: "夏至风从西北起，瓜菜园中受熬煎",
+                        explanation: "夏至如果刮西北风，瓜菜园会受到干旱的煎熬。",
+                        english: "Northwest wind at Summer Solstice brings drought to melon and vegetable gardens."
+                    }
+                ]
+            },
+            {
+                id: "xiaoshu",
+                name: "小暑",
+                english: "Minor Heat",
+                description: "小暑表示天气开始炎热，但还未达到最热。",
+                proverbs: [
+                    {
+                        chinese: "小暑热得透，大暑凉悠悠",
+                        explanation: "小暑如果非常热，大暑反而会比较凉爽。",
+                        english: "If Minor Heat is extremely hot, Major Heat will be cool."
+                    },
+                    {
+                        chinese: "小暑大暑，上蒸下煮",
+                        explanation: "小暑和大暑时节，天气闷热，如同上下都在蒸煮。",
+                        english: "Minor Heat and Major Heat: steaming above, boiling below."
+                    }
+                ]
+            },
+            {
+                id: "dashu",
+                name: "大暑",
+                english: "Major Heat",
+                description: "大暑是一年中最热的时期。",
+                proverbs: [
+                    {
+                        chinese: "大暑不浇苗，到老无好稻",
+                        explanation: "大暑时节如果不浇灌禾苗，到成熟时不会有好的稻谷。",
+                        english: "No watering seedlings at Major Heat means poor rice harvest."
+                    },
+                    {
+                        chinese: "大暑连天旱，水车吱呀转",
+                        explanation: "大暑时节如果连续干旱，水车就要不停地转动灌溉。",
+                        english: "Drought during Major Heat keeps waterwheels turning."
+                    }
+                ]
+            },
+            {
+                id: "liqiu",
+                name: "立秋",
+                english: "Start of Autumn",
+                description: "立秋标志着秋季的开始。凉风开始吹拂，果实逐渐成熟。",
+                proverbs: [
+                    {
+                        chinese: "立秋三天，寸草结籽",
+                        explanation: "立秋后三天，连小草都开始结籽。",
+                        english: "Three days after Start of Autumn, even grass begins to seed."
+                    },
+                    {
+                        chinese: "立秋之日凉风至",
+                        explanation: "立秋这一天，凉风开始吹来。",
+                        english: "Cool wind arrives on the day of Start of Autumn."
+                    }
+                ]
+            },
+            {
+                id: "chushu",
+                name: "处暑",
+                english: "End of Heat",
+                description: "处暑表示暑热即将结束，天气开始转凉。",
+                proverbs: [
+                    {
+                        chinese: "处暑满地黄，家家修廪仓",
+                        explanation: "处暑时节，地里的庄稼成熟金黄，家家户户都在修理粮仓准备收获。",
+                        english: "Crops turn golden at End of Heat; every household repairs granaries."
+                    },
+                    {
+                        chinese: "处暑修仓，仓仓满仓",
+                        explanation: "处暑时节修理粮仓，收获时每个粮仓都会装满。",
+                        english: "Repair granaries at End of Heat, and they will all be full."
+                    }
+                ]
+            },
+            {
+                id: "bailu",
+                name: "白露",
+                english: "White Dew",
+                description: "白露时节，露水增多，天气转凉。",
+                proverbs: [
+                    {
+                        chinese: "白露打枣，秋分卸梨",
+                        explanation: "白露时节打枣子，秋分时节摘梨子。",
+                        english: "Beat jujubes at White Dew, pick pears at Autumn Equinox."
+                    },
+                    {
+                        chinese: "白露的雨，下一场，凉一场",
+                        explanation: "白露时节下雨，每下一场天气就更凉一些。",
+                        english: "Each rain at White Dew brings cooler weather."
+                    }
+                ]
+            },
+            {
+                id: "qiufen",
+                name: "秋分",
+                english: "Autumn Equinox",
+                description: "秋分时节，昼夜等长。这是收获的季节，人们的喜悦和期待随着收成的增加而愈发浓厚。",
+                proverbs: [
+                    {
+                        chinese: "秋分祭月，月圆人圆",
+                        explanation: "秋分时节祭祀月亮，希望家人团圆。",
+                        english: "Worship the moon at Autumn Equinox; may the moon be full and family reunited."
+                    },
+                    {
+                        chinese: "秋分不分，五谷不分",
+                        explanation: "秋分时节如果不抓紧收获，五谷就会分辨不清。",
+                        english: "No harvest at Autumn Equinox means confused grains."
+                    }
+                ]
+            },
+            {
+                id: "hanlu",
+                name: "寒露",
+                english: "Cold Dew",
+                description: "寒露时节，气温明显下降，露水更凉。",
+                proverbs: [
+                    {
+                        chinese: "寒露收萝卜，霜降收白菜",
+                        explanation: "寒露时节收获萝卜，霜降时节收获白菜。",
+                        english: "Harvest radishes at Cold Dew, cabbages at Frost's Descent."
+                    },
+                    {
+                        chinese: "寒露不储菜，霜降空锅台",
+                        explanation: "寒露时节如果不储存蔬菜，霜降时就会没有菜吃。",
+                        english: "No vegetable storage at Cold Dew means empty cooking pots at Frost's Descent."
+                    }
+                ]
+            },
+            {
+                id: "shuangjiang",
+                name: "霜降",
+                english: "Frost's Descent",
+                description: "霜降标志着冬季即将来临，寒气加重，开始出现霜冻。",
+                proverbs: [
+                    {
+                        chinese: "霜降不耕地，来年虫满地",
+                        explanation: "霜降时节如果不耕地，第二年地里会有很多虫子。",
+                        english: "No plowing at Frost's Descent means many pests next year."
+                    },
+                    {
+                        chinese: "霜降无霜，碓头无糠",
+                        explanation: "霜降时节如果没有霜，来年的收成会不好。",
+                        english: "No frost at Frost's Descent means poor harvest."
+                    }
+                ]
+            },
+            {
+                id: "lidong",
+                name: "立冬",
+                english: "Start of Winter",
+                description: "立冬标志着冬季的开始。人们开始准备过冬的食物和衣物。",
+                proverbs: [
+                    {
+                        chinese: "立冬补冬，酿酒封缸",
+                        explanation: "立冬时节要进补，酿酒并密封酒缸。",
+                        english: "Nourish the body at Start of Winter; brew wine and seal the jar."
+                    },
+                    {
+                        chinese: "立冬酿酒，小雪腌肉",
+                        explanation: "立冬时节酿酒，小雪时节腌肉。",
+                        english: "Brew wine at Start of Winter, salt meat at Light Snow."
+                    }
+                ]
+            },
+            {
+                id: "xiaoxue",
+                name: "小雪",
+                english: "Light Snow",
+                description: "小雪表示开始降雪，但雪量较小。",
+                proverbs: [
+                    {
+                        chinese: "小雪封地，大雪封河",
+                        explanation: "小雪时节土地开始冻结，大雪时节河流开始结冰。",
+                        english: "Land freezes at Light Snow, rivers freeze at Heavy Snow."
+                    },
+                    {
+                        chinese: "小雪腌菜，大雪腌肉",
+                        explanation: "小雪时节腌菜，大雪时节腌肉。",
+                        english: "Pickle vegetables at Light Snow, salt meat at Heavy Snow."
+                    }
+                ]
+            },
+            {
+                id: "daxue",
+                name: "大雪",
+                english: "Heavy Snow",
+                description: "大雪表示雪量增大，天气更冷。",
+                proverbs: [
+                    {
+                        chinese: "瑞雪兆丰年",
+                        explanation: "及时的大雪预示着来年的丰收。",
+                        english: "A timely heavy snow indicates a good harvest year."
+                    },
+                    {
+                        chinese: "大雪河封住，冬至不行船",
+                        explanation: "大雪时节河流结冰，冬至时不能行船。",
+                        english: "Rivers freeze at Heavy Snow; no boating at Winter Solstice."
+                    }
+                ]
+            },
+            {
+                id: "dongzhi",
+                name: "冬至",
+                english: "Winter Solstice",
+                description: "冬至是一年中白天最短、夜晚最长的日子。",
+                proverbs: [
+                    {
+                        chinese: "冬至阳生春又来",
+                        explanation: "冬至过后，阳气开始回升，春天即将到来。",
+                        english: "Yang energy rises after Winter Solstice; spring is coming."
+                    },
+                    {
+                        chinese: "冬至黑，过年疏；冬至疏，过年黑",
+                        explanation: "冬至如果天黑，过年就会晴朗；冬至如果晴朗，过年就会天黑。",
+                        english: "Dark Winter Solstice means clear Spring Festival; clear Winter Solstice means dark Spring Festival."
+                    }
+                ]
+            },
+            {
+                id: "xiaohan",
+                name: "小寒",
+                english: "Minor Cold",
+                description: "小寒表示天气寒冷，但还未达到最冷。",
+                proverbs: [
+                    {
+                        chinese: "小寒天气渐严寒，养生保健记心间",
+                        explanation: "小寒时节天气逐渐严寒，要注意养生保健。",
+                        english: "Weather turns cold at Minor Cold; remember to maintain health."
+                    },
+                    {
+                        chinese: "小寒大寒，冻成一团",
+                        explanation: "小寒和大寒时节，天气非常寒冷，万物都冻成一团。",
+                        english: "Minor Cold and Major Cold: everything freezes into a ball."
+                    }
+                ]
+            },
+            {
+                id: "dahan",
+                name: "大寒",
+                english: "Major Cold",
+                description: "大寒是一年中最冷的时期。",
+                proverbs: [
+                    {
+                        chinese: "大寒严寒至，冬日暖阳暖人心",
+                        explanation: "大寒时节非常寒冷，但冬日的阳光温暖人心。",
+                        english: "Extreme cold arrives at Major Cold; winter sun warms the heart."
+                    },
+                    {
+                        chinese: "大寒到顶点，日后天渐暖",
+                        explanation: "大寒是寒冷的顶点，之后天气会逐渐转暖。",
+                        english: "Major Cold is the peak of cold; weather will gradually warm afterward."
+                    }
+                ]
+            }
+        ];
+
+        // DOM元素
+        const solarTermsGrid = document.getElementById('solar-terms-grid');
+        const homeSection = document.getElementById('home-section');
+        const termDetailSection = document.getElementById('term-detail-section');
+        const aboutSection = document.getElementById('about-section');
+        const backToHomeBtn = document.getElementById('back-to-home');
+        const studyModeBtn = document.getElementById('study-mode-btn');
+        const quizModeBtn = document.getElementById('quiz-mode-btn');
+        const studyModeContent = document.getElementById('study-mode-content');
+        const quizModeContent = document.getElementById('quiz-mode-content');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navHome = document.getElementById('nav-home');
+        const navAbout = document.getElementById('nav-about');
+        const mobileNavHome = document.getElementById('mobile-nav-home');
+        const mobileNavAbout = document.getElementById('mobile-nav-about');
+        const proverbSlider = document.getElementById('proverb-slider');
+        const sliderIndicators = document.getElementById('slider-indicators');
+        const quizContainer = document.getElementById('quiz-container');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const retryQuizBtn = document.getElementById('retry-quiz-btn');
+        const resultModal = document.getElementById('result-modal');
+        const closeResultModalBtn = document.getElementById('close-result-modal');
+        const resultTitle = document.getElementById('result-title');
+        const resultMessage = document.getElementById('result-message');
+        const correctCountSpan = document.getElementById('correct-count');
+        const totalCountSpan = document.getElementById('total-count');
+
+        // 当前状态
+        let currentTerm = null;
+        let currentQuizIndex = 0;
+        let quizQuestions = [];
+        let userAnswers = [];
+
+        // 初始化页面
+        function init() {
+            renderSolarTermsGrid();
+            setupEventListeners();
+        }
+
+        // 渲染节气卡片网格
+        function renderSolarTermsGrid() {
+            solarTermsGrid.innerHTML = '';
+            solarTermsData.forEach((term, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl shadow-md overflow-hidden card-hover';
+                card.innerHTML = `
+                    <div class="h-32 bg-gradient-to-r from-primary to-blue-400 flex items-center justify-center">
+                        <span class="text-white text-4xl font-bold">${index + 1}</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-dark mb-1">${term.name}</h3>
+                        <p class="text-gray-600 mb-4">${term.english}</p>
+                        <button class="btn-outline w-full" data-term-id="${term.id}">查看详情</button>
+                    </div>
+                `;
+                solarTermsGrid.appendChild(card);
+
+                // 添加点击事件
+                const detailBtn = card.querySelector('button');
+                detailBtn.addEventListener('click', () => showTermDetail(term.id));
+            });
+        }
+
+        // 显示节气详情
+        function showTermDetail(termId) {
+            currentTerm = solarTermsData.find(term => term.id === termId);
+            if (!currentTerm) return;
+
+            // 更新页面内容
+            document.getElementById('term-name').textContent = currentTerm.name;
+            document.getElementById('term-english').textContent = currentTerm.english;
+            document.getElementById('term-description').textContent = currentTerm.description;
+
+            // 渲染学习模式内容
+            renderStudyMode();
+
+            // 准备刷题模式
+            prepareQuiz();
+
+            // 显示详情页，隐藏首页
+            homeSection.classList.add('hidden');
+            aboutSection.classList.add('hidden');
+            termDetailSection.classList.remove('hidden');
+
+            // 默认显示学习模式
+            showStudyMode();
+
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 渲染学习模式内容
+        function renderStudyMode() {
+            proverbSlider.innerHTML = '';
+            sliderIndicators.innerHTML = '';
+
+            currentTerm.proverbs.forEach((proverb, index) => {
+                const proverbCard = document.createElement('div');
+                proverbCard.className = `proverb-card ${index === 0 ? 'block' : 'hidden'} animate-fade-in`;
+                proverbCard.innerHTML = `
+                    <div class="bg-neutral rounded-lg p-6 mb-6">
+                        <h4 class="text-xl font-bold text-dark mb-4">农谚 ${index + 1}</h4>
+                        <p class="text-lg text-dark mb-4">${proverb.chinese}</p>
+                        <div class="mb-4">
+                            <h5 class="text-sm font-medium text-gray-500 mb-2">中文解释</h5>
+                            <p class="text-gray-700">${proverb.explanation}</p>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-medium text-gray-500 mb-2">English Translation</h5>
+                            <p class="text-gray-700 italic">${proverb.english}</p>
+                        </div>
+                    </div>
+                `;
+                proverbSlider.appendChild(proverbCard);
+
+                // 添加指示器
+                const indicator = document.createElement('button');
+                indicator.className = `w-3 h-3 rounded-full ${index === 0 ? 'bg-primary' : 'bg-gray-300'}`;
+                indicator.addEventListener('click', () => showProverbCard(index));
+                sliderIndicators.appendChild(indicator);
+            });
+        }
+
+        // 显示指定的农谚卡片
+        function showProverbCard(index) {
+            const cards = document.querySelectorAll('.proverb-card');
+            const indicators = sliderIndicators.querySelectorAll('button');
+
+            cards.forEach((card, i) => {
+                card.classList.toggle('hidden', i !== index);
+            });
+
+            indicators.forEach((indicator, i) => {
+                indicator.classList.toggle('bg-primary', i === index);
+                indicator.classList.toggle('bg-gray-300', i !== index);
+            });
+        }
+
+        // 准备刷题模式
+        function prepareQuiz() {
+            quizQuestions = [];
+            userAnswers = [];
+
+            // 为每个农谚创建两道题目
+            currentTerm.proverbs.forEach((proverb, index) => {
+                // 题目1：根据英文翻译选择正确的农谚
+                quizQuestions.push({
+                    type: 'english-to-chinese',
+                    question: `Which Chinese proverb matches this translation: "${proverb.english}"?`,
+                    correctAnswer: proverb.chinese,
+                    options: generateOptions(proverb.chinese)
+                });
+
+                // 题目2：根据中文解释选择正确的农谚
+                quizQuestions.push({
+                    type: 'explanation-to-chinese',
+                    question: `Which Chinese proverb matches this explanation: "${proverb.explanation}"?`,
+                    correctAnswer: proverb.chinese,
+                    options: generateOptions(proverb.chinese)
+                });
+            });
+
+            // 重置当前题目索引
+            currentQuizIndex = 0;
+        }
+
+        // 生成选择题选项
+        function generateOptions(correctAnswer) {
+            // 获取其他节气的农谚作为干扰选项
+            const allOtherProverbs = solarTermsData
+                .flatMap(term => term.proverbs.map(p => p.chinese))
+                .filter(p => p !== correctAnswer);
+
+            // 随机选择3个干扰选项
+            const shuffled = allOtherProverbs.sort(() => 0.5 - Math.random());
+            const options = [correctAnswer, ...shuffled.slice(0, 3)];
+
+            // 打乱选项顺序
+            return options.sort(() => 0.5 - Math.random());
+        }
+
+        // 渲染当前题目
+        function renderCurrentQuestion() {
+            const question = quizQuestions[currentQuizIndex];
+            quizContainer.innerHTML = `
+                <div class="mb-6">
+                    <h4 class="text-lg font-medium text-dark mb-4">问题 ${currentQuizIndex + 1}/${quizQuestions.length}</h4>
+                    <p class="text-gray-700 mb-6">${question.question}</p>
+                    <div class="space-y-3">
+                        ${question.options.map((option, index) => `
+                            <button class="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-neutral transition-colors duration-300 quiz-option ${userAnswers[currentQuizIndex] === index ? 'bg-primary bg-opacity-10 border-primary' : ''}" data-option-index="${index}">
+                                ${String.fromCharCode(65 + index)}. ${option}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="hidden quiz-feedback p-4 rounded-lg mb-6 ${userAnswers[currentQuizIndex] === question.options.indexOf(question.correctAnswer) ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}" id="quiz-feedback">
+                    <p class="font-medium">${userAnswers[currentQuizIndex] === question.options.indexOf(question.correctAnswer) ? '✓ 正确!' : '✗ 错误!'}</p>
+                    <p class="mt-2">${userAnswers[currentQuizIndex] === question.options.indexOf(question.correctAnswer) ? '你选择了正确的答案。' : `正确答案是: ${question.correctAnswer}`}</p>
+                </div>
+            `;
+
+            // 添加选项点击事件
+            const options = quizContainer.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    const optionIndex = parseInt(option.dataset.optionIndex);
+                    selectOption(optionIndex);
+                });
+            });
+
+            // 更新按钮状态
+            nextQuestionBtn.textContent = currentQuizIndex === quizQuestions.length - 1 ? '查看结果' : '下一题';
+            nextQuestionBtn.classList.toggle('hidden', userAnswers[currentQuizIndex] === undefined);
+        }
+
+        // 选择选项
+        function selectOption(optionIndex) {
+            userAnswers[currentQuizIndex] = optionIndex;
+            const question = quizQuestions[currentQuizIndex];
+            const feedback = document.getElementById('quiz-feedback');
+
+            // 显示反馈
+            feedback.classList.remove('hidden');
+
+            // 禁用所有选项
+            const options = quizContainer.querySelectorAll('.quiz-option');
+            options.forEach((option, index) => {
+                option.disabled = true;
+                option.classList.remove('hover:bg-neutral');
+                
+                if (index === optionIndex) {
+                    option.classList.add('border-primary', 'bg-primary', 'bg-opacity-10');
+                }
+                
+                if (index === question.options.indexOf(question.correctAnswer)) {
+                    option.classList.add('border-green-500');
+                }
+            });
+
+            // 显示下一题按钮
+            nextQuestionBtn.classList.remove('hidden');
+        }
+
+        // 显示学习模式
+        function showStudyMode() {
+            studyModeContent.classList.remove('hidden');
+            quizModeContent.classList.add('hidden');
+            studyModeBtn.classList.remove('btn-outline');
+            studyModeBtn.classList.add('btn-primary');
+            quizModeBtn.classList.remove('btn-secondary');
+            quizModeBtn.classList.add('btn-outline');
+        }
+
+        // 显示刷题模式
+        function showQuizMode() {
+            studyModeContent.classList.add('hidden');
+            quizModeContent.classList.remove('hidden');
+            studyModeBtn.classList.remove('btn-primary');
+            studyModeBtn.classList.add('btn-outline');
+            quizModeBtn.classList.remove('btn-outline');
+            quizModeBtn.classList.add('btn-secondary');
+
+            // 渲染第一题
+            renderCurrentQuestion();
+        }
+
+        // 下一题
+        function nextQuestion() {
+            if (currentQuizIndex < quizQuestions.length - 1) {
+                currentQuizIndex++;
+                renderCurrentQuestion();
+            } else {
+                showQuizResult();
+            }
+        }
+
+        // 显示测验结果
+        function showQuizResult() {
+            const correctCount = userAnswers.filter((answer, index) => {
+                return answer === quizQuestions[index].options.indexOf(quizQuestions[index].correctAnswer);
+            }).length;
+
+            correctCountSpan.textContent = correctCount;
+            totalCountSpan.textContent = quizQuestions.length;
+
+            if (correctCount === quizQuestions.length) {
+                resultTitle.textContent = '太棒了！';
+                resultMessage.innerHTML = `你答对了 <span id="correct-count">${correctCount}</span> 题，共 <span id="total-count">${quizQuestions.length}</span> 题！你对${currentTerm.name}的农谚掌握得非常好！`;
+            } else if (correctCount >= quizQuestions.length / 2) {
+                resultTitle.textContent = '做得不错！';
+                resultMessage.innerHTML = `你答对了 <span id="correct-count">${correctCount}</span> 题，共 <span id="total-count">${quizQuestions.length}</span> 题！继续加油！`;
+            } else {
+                resultTitle.textContent = '继续努力！';
+                resultMessage.innerHTML = `你答对了 <span id="correct-count">${correctCount}</span> 题，共 <span id="total-count">${quizQuestions.length}</span> 题！建议再学习一下${currentTerm.name}的农谚。`;
+            }
+
+            resultModal.classList.remove('hidden');
+
+            // 显示重新开始按钮
+            nextQuestionBtn.classList.add('hidden');
+            retryQuizBtn.classList.remove('hidden');
+        }
+
+        // 重新开始测验
+        function retryQuiz() {
+            userAnswers = [];
+            currentQuizIndex = 0;
+            renderCurrentQuestion();
+            retryQuizBtn.classList.add('hidden');
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 返回首页按钮
+            backToHomeBtn.addEventListener('click', () => {
+                homeSection.classList.remove('hidden');
+                termDetailSection.classList.add('hidden');
+                aboutSection.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // 学习模式按钮
+            studyModeBtn.addEventListener('click', showStudyMode);
+
+            // 刷题模式按钮
+            quizModeBtn.addEventListener('click', showQuizMode);
+
+            // 下一题按钮
+            nextQuestionBtn.addEventListener('click', nextQuestion);
+
+            // 重新开始按钮
+            retryQuizBtn.addEventListener('click', retryQuiz);
+
+            // 关闭结果弹窗按钮
+            closeResultModalBtn.addEventListener('click', () => {
+                resultModal.classList.add('hidden');
+            });
+
+            // 移动端菜单按钮
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // 导航链接
+            navHome.addEventListener('click', (e) => {
+                e.preventDefault();
+                homeSection.classList.remove('hidden');
+                termDetailSection.classList.add('hidden');
+                aboutSection.classList.add('hidden');
+                mobileMenu.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            navAbout.addEventListener('click', (e) => {
+                e.preventDefault();
+                homeSection.classList.add('hidden');
+                termDetailSection.classList.add('hidden');
+                aboutSection.classList.remove('hidden');
+                mobileMenu.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            mobileNavHome.addEventListener('click', (e) => {
+                e.preventDefault();
+                homeSection.classList.remove('hidden');
+                termDetailSection.classList.add('hidden');
+                aboutSection.classList.add('hidden');
+                mobileMenu.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            mobileNavAbout.addEventListener('click', (e) => {
+                e.preventDefault();
+                homeSection.classList.add('hidden');
+                termDetailSection.classList.add('hidden');
+                aboutSection.classList.remove('hidden');
+                mobileMenu.classList.add('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // 点击弹窗外部关闭弹窗
+            resultModal.addEventListener('click', (e) => {
+                if (e.target === resultModal) {
+                    resultModal.classList.add('hidden');
+                }
+            });
+        }
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+
+</body></html>
